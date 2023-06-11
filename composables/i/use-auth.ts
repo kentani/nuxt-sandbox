@@ -6,20 +6,20 @@ export default function AuthStore(ctx: any) {
   // 状態
   const state = reactive<{
     currentUser: any,
-    User: any,
-    Instructor: any,
-    Gyms: Array<Object>,
-    Gym: any,
-    Members: Array<Object>,
-    Member: any,
+    user: any,
+    instructor: any,
+    gyms: Array<Object>,
+    gym: any,
+    members: Array<Object>,
+    member: any,
   }>({
     currentUser: null,
-    User: null,
-    Instructor: null,
-    Gyms: [],
-    Gym: null,
-    Members: [],
-    Member: null,
+    user: null,
+    instructor: null,
+    gyms: [],
+    gym: null,
+    members: [],
+    member: null,
   })
 
   // computed
@@ -32,27 +32,27 @@ export default function AuthStore(ctx: any) {
   })
 
   const user = computed(() => {
-    return state.User;
+    return state.user;
   })
 
   const instructor = computed(() => {
-    return state.Instructor;
+    return state.instructor;
   })
 
   const gyms = computed(() => {
-    return state.Gyms;
+    return state.gyms;
   })
 
   const gym = computed(() => {
-    return state.Gym;
+    return state.gym;
   })
 
   const members = computed(() => {
-    return state.Members;
+    return state.members;
   })
 
   const member = computed(() => {
-    return state.Member;
+    return state.member;
   })
 
   // ロジック
@@ -77,7 +77,7 @@ export default function AuthStore(ctx: any) {
 
     signOut(auth).then(() => {
       state.currentUser = null;
-      state.User = null;
+      state.user = null;
       val = true;
     }).catch((error) => {
       console.log(error);
@@ -96,7 +96,7 @@ export default function AuthStore(ctx: any) {
           await fetchUser({ uid: currentUser?.uid })
         } else {
           state.currentUser = null;
-          state.User = null;
+          state.user = null;
         }
 
         resolve();
@@ -116,7 +116,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.User = doc.data();
+        state.user = doc.data();
       });
     }
 
@@ -136,7 +136,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.Instructor = doc.data();
+        state.instructor = doc.data();
       });
     }
 
@@ -159,7 +159,7 @@ export default function AuthStore(ctx: any) {
         tmpGyms.push(doc.data())
       });
 
-      state.Gyms = tmpGyms
+      state.gyms = tmpGyms
     }
 
     return gyms.value
@@ -177,7 +177,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.Gym = doc.data();
+        state.gym = doc.data();
       });
     }
 
@@ -200,7 +200,7 @@ export default function AuthStore(ctx: any) {
         tmpMembers.push(doc.data());
       });
 
-      state.Members = tmpMembers
+      state.members = tmpMembers
     }
 
     return members.value
@@ -219,7 +219,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.Member = doc.data();
+        state.member = doc.data();
       });
     }
 
