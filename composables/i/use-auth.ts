@@ -5,50 +5,54 @@ import { getFirestore, collection, query, where, getDocs, orderBy, limit, Docume
 export default function AuthStore(ctx: any) {
   // 状態
   const state = reactive<{
-    tmpCurrentUser: any,
-    tmpUser: any,
-    tmpInstructor: any,
-    tmpGyms: Array<Object>,
-    tmpGym: any,
-    tmpMembers: Array<Object>,
-    tmpMember: any,
+    currentUser: any,
+    User: any,
+    Instructor: any,
+    Gyms: Array<Object>,
+    Gym: any,
+    Members: Array<Object>,
+    Member: any,
   }>({
-    tmpCurrentUser: null,
-    tmpUser: null,
-    tmpInstructor: null,
-    tmpGyms: [],
-    tmpGym: null,
-    tmpMembers: [],
-    tmpMember: null,
+    currentUser: null,
+    User: null,
+    Instructor: null,
+    Gyms: [],
+    Gym: null,
+    Members: [],
+    Member: null,
   })
 
   // computed
   const isLogined = computed(() => {
-    return !!state.tmpCurrentUser;
+    return !!state.currentUser;
+  })
+
+  const currentUser = computed(() => {
+    return state.currentUser;
   })
 
   const user = computed(() => {
-    return state.tmpUser;
+    return state.User;
   })
 
   const instructor = computed(() => {
-    return state.tmpInstructor;
+    return state.Instructor;
   })
 
   const gyms = computed(() => {
-    return state.tmpGyms;
+    return state.Gyms;
   })
 
   const gym = computed(() => {
-    return state.tmpGym;
+    return state.Gym;
   })
 
   const members = computed(() => {
-    return state.tmpMembers;
+    return state.Members;
   })
 
   const member = computed(() => {
-    return state.tmpMember;
+    return state.Member;
   })
 
   // ロジック
@@ -58,7 +62,7 @@ export default function AuthStore(ctx: any) {
 
     await signInWithPopup(auth, new GoogleAuthProvider)
       .then((result) => {
-        state.tmpCurrentUser = result.user;
+        state.currentUser = result.user;
         val = true;
       }).catch((error) => {
         console.log(error);
@@ -72,6 +76,8 @@ export default function AuthStore(ctx: any) {
     let val = false;
 
     signOut(auth).then(() => {
+      state.currentUser = null;
+      state.User = null;
       val = true;
     }).catch((error) => {
       console.log(error);
@@ -86,11 +92,11 @@ export default function AuthStore(ctx: any) {
 
       onAuthStateChanged(auth, async (currentUser) => {
         if (currentUser) {
-          state.tmpCurrentUser = auth.currentUser;
+          state.currentUser = auth.currentUser;
           await fetchUser({ uid: currentUser?.uid })
         } else {
-          state.tmpCurrentUser = null;
-          state.tmpUser = null;
+          state.currentUser = null;
+          state.User = null;
         }
 
         resolve();
@@ -110,7 +116,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.tmpUser = doc.data();
+        state.User = doc.data();
       });
     }
 
@@ -130,7 +136,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.tmpInstructor = doc.data();
+        state.Instructor = doc.data();
       });
     }
 
@@ -153,7 +159,7 @@ export default function AuthStore(ctx: any) {
         tmpGyms.push(doc.data())
       });
 
-      state.tmpGyms = tmpGyms
+      state.Gyms = tmpGyms
     }
 
     return gyms.value
@@ -171,7 +177,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.tmpGym = doc.data();
+        state.Gym = doc.data();
       });
     }
 
@@ -194,7 +200,7 @@ export default function AuthStore(ctx: any) {
         tmpMembers.push(doc.data());
       });
 
-      state.tmpMembers = tmpMembers
+      state.Members = tmpMembers
     }
 
     return members.value
@@ -213,7 +219,7 @@ export default function AuthStore(ctx: any) {
       ));
 
       querySnapshot.forEach((doc) => {
-        state.tmpMember = doc.data();
+        state.Member = doc.data();
       });
     }
 
@@ -222,6 +228,7 @@ export default function AuthStore(ctx: any) {
 
   return {
     isLogined,
+    currentUser,
     user,
     instructor,
     gyms,

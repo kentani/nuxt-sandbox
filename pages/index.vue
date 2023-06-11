@@ -1,67 +1,65 @@
 <template>
-  <v-container>
-    <div>index</div>
+  <v-container style="height: 100%;">
+    <div>TOP</div>
+    <div>isLogined: {{ isLogined }}</div>
+    <div>uid: {{ currentUser?.uid }}</div>
+    <div>displayName: {{ currentUser?.displayName }}</div>
+    <div>userID: {{ user?.id }}</div>
+    <div>admin: {{ user?.admin }}</div>
+    <div>approved: {{ user?.approved }}</div>
+    <div>registered: {{ user?.registered }}</div>
+
+    <v-row
+      justify="center"
+      align="center"
+      style="height: 100%;"
+    >
+      <v-col
+        cols="12"
+        class="text-center"
+      >
+        <v-btn
+          rounded
+          large
+          elevation="4"
+          color="white"
+          style="text-transform: none"
+          @click="onClickGoogleLogout"
+        >
+          <v-icon left>
+            mdi-google
+          </v-icon>
+          Sign out with Google
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from '@nuxtjs/composition-api';
-import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider, signOut } from "firebase/auth";
+import { defineComponent, inject, onBeforeMount, useRouter } from "@nuxtjs/composition-api";
+import { AuthStoreType } from "@/composables/i/use-auth";
+import AuthKey from "@/composables/i/use-auth-key";
 
 export default defineComponent({
+  layout: 'default',
   setup() {
-    onMounted(() => {
-      // const auth = getAuth();
-      // const user = auth.currentUser;
-      // console.log('user3: ', user)
+    const { isLogined, currentUser, user, confirmAuth, logout } = inject(AuthKey) as AuthStoreType;
 
-      // checkLogin();
-
-      // signOut(auth).then(() => {
-      //   // Sign-out successful.
-      // }).catch((error) => {
-      //   // An error happened.
-      // });
+    onBeforeMount(() => {
+      confirmAuth()
     })
 
-    const checkLogin = () => {
-      const auth = getAuth();
-      let currentUser: any;
+    const onClickGoogleLogout = () => {
+      logout()
+    };
 
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          currentUser = auth.currentUser;
-        }
-      });
-
-      return currentUser;
-    }
-
-    const login = () => {
-      const auth = getAuth();
-
-      signInWithPopup(auth, new GoogleAuthProvider)
-        .then((result) => {
-          const credential = GoogleAuthProvider.credentialFromResult(result);
-          const token = credential?.accessToken;
-          const user = result.user;
-        }).catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          const email = error.customData.email;
-          const credential = GoogleAuthProvider.credentialFromError(error);
-        });
-    }
-
-    const logout = () => {
-      const auth = getAuth();
-
-      signOut(auth).then(() => {
-        // Sign-out successful.
-      }).catch((error) => {
-        // An error happened.
-      });
-    }
+    return {
+      isLogined,
+      currentUser,
+      user,
+      onClickGoogleLogout,
+    };
   },
 })
 </script>

@@ -1,11 +1,11 @@
 <template>
-  <v-app v-show="isLogined && user && !user.admin && !user?.approved && !user?.registered">
+  <v-app v-show="showable">
     <slot />
   </v-app>
 </template>
 
 <script lang="ts">
-import { defineComponent, inject, onBeforeMount, useRouter } from '@nuxtjs/composition-api';
+import { computed, defineComponent, inject, onBeforeMount, reactive, useRouter } from '@nuxtjs/composition-api';
 import AuthStoreKey from "@/composables/i/use-auth-key";
 import { AuthStoreType } from "@/composables/i/use-auth";
 
@@ -14,6 +14,14 @@ export default defineComponent({
   setup() {
     const { isLogined, user, confirmAuth } = inject(AuthStoreKey) as AuthStoreType;
     const router = useRouter()
+
+    let state = reactive({
+      showable: false
+    });
+
+    let showable = computed(() => {
+      return state.showable
+    })
 
     onBeforeMount(() => {
       confirmAuth().then(() => {
@@ -36,6 +44,7 @@ export default defineComponent({
             return router.push('/i/apply');
           }
         } else {
+          state.showable = true
           // 未ログイン
           // ログイン画面のまま
         };
@@ -43,8 +52,7 @@ export default defineComponent({
     });
 
     return {
-      isLogined,
-      user
+      showable,
     };
   },
 })

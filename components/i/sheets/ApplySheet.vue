@@ -24,7 +24,7 @@ export default defineComponent({
             return router.push('/admin/menus');
           } else if (user.value.approved || user.value.registered) {
             // 承認済み || 登録済み
-            if (user.value.gyms.length === 1) {
+            if (user.value.gymsFromInstructor.length === 1) {
               // 所属しているジムが一つの場合は、メニュー画面に遷移
               return router.push({ path: '/i/menus', query: { gymID: user.value.gymsFromInstructor[0] } });
             } else {

@@ -41,7 +41,7 @@ export default defineComponent({
 
     const onClickGoogleLogin = () => {
       login().then(() => {
-        router.push('/apply');
+        router.push('/i/apply');
       })
     };
 
