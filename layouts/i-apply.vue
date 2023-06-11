@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <ApplySheet>
     <v-app-bar
       app
       fixed
@@ -21,17 +21,22 @@
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
-  </v-app>
+  </ApplySheet>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, provide } from '@nuxtjs/composition-api';
-import AuthKey from "@/composables/i/use-auth-key";
-import useAuth from "@/composables/i/use-auth";
+import AuthStoreKey from "@/composables/i/use-auth-key";
+import AuthStore from "@/composables/i/use-auth";
+
+import ApplySheet from "@/components/i/sheets/ApplySheet.vue"
 
 export default defineComponent({
+  components: {
+    ApplySheet,
+  },
   setup(ctx) {
-    provide(AuthKey, useAuth(ctx));
+    provide(AuthStoreKey, AuthStore(ctx));
 
     const title = ref('Nuxt Sandbox');
 
