@@ -1,6 +1,6 @@
 import { reactive, computed } from "@nuxtjs/composition-api";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, query, where, getDocs, orderBy, limit, DocumentData } from "firebase/firestore";
+import { getFirestore, collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
 
 export default function AuthStore(ctx: any) {
   // 状態
